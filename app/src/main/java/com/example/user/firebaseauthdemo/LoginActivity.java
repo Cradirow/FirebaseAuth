@@ -163,22 +163,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if(TextUtils.isEmpty(email)){
             //email is empty
-            Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "이메일을 입력하세요", Toast.LENGTH_SHORT).show();
             //stopping the function execution further
             return;
         }
 
         if(TextUtils.isEmpty(password)) {
             //password is empty
-            Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "패스워드를 입력하세요", Toast.LENGTH_SHORT).show();
             //stopping the function execution further
             return;
         }
         //if validation are ok
         //we will first show a progressbar
 
-        progressDialog.setTitle("Loading...");
-        progressDialog.setMessage("Registering User...");
+        progressDialog.setTitle("로딩중...");
+        progressDialog.setMessage("로그인 중입니다");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
 

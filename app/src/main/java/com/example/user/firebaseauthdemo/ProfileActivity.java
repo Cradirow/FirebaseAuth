@@ -34,7 +34,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             finish();
             startActivity(new Intent(this,LoginActivity.class));
         }
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
         editTextAddress = (EditText) findViewById(R.id.editTextAddress);
         editTextName = (EditText)findViewById(R.id.editTextName);
         buttonSave = (Button)findViewById(R.id.buttonSave);
@@ -57,8 +59,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         FirebaseUser user = firebaseAuth.getCurrentUser();
         databaseReference.child(user.getUid()).setValue(userInformation);
 
-        Toast.makeText(this, "Information Saved...", Toast.LENGTH_LONG).show();
-
+        Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_LONG).show();
     }
 
     @Override
