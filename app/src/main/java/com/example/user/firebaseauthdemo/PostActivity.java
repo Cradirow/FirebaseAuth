@@ -12,8 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,6 +36,8 @@ public class PostActivity extends AppCompatActivity {
     private static final int PERMISSIONS_REQUEST_READ_STORAGE = 100;
 
     private StorageReference mStorage;
+    private DatabaseReference mDatabase;
+    private FirebaseAuth firebaseAuth;
 
     private ProgressDialog mProgress;
 
@@ -51,6 +57,8 @@ public class PostActivity extends AppCompatActivity {
         mSubmitBtn = (Button) findViewById(R.id.submitBtn);
 
         mStorage = FirebaseStorage.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Blog");
+        firebaseAuth = FirebaseAuth.getInstance();
 
         mProgress = new ProgressDialog(this);
 
@@ -75,8 +83,8 @@ public class PostActivity extends AppCompatActivity {
 
         mProgress.setMessage("Posting to Blog ... ");
 
-        String title_val = mPostTitle.getText().toString().trim();
-        String desc_val = mPostDesc.getText().toString().trim();
+        final String title_val = mPostTitle.getText().toString().trim();
+        final String desc_val = mPostDesc.getText().toString().trim();
 
         if(!TextUtils.isEmpty(title_val) && !TextUtils.isEmpty(desc_val) && mImageUri != null) {
             mProgress.show();
@@ -86,7 +94,17 @@ public class PostActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                    DatabaseReference newPost = mDatabase.push();
+                    newPost.child("title").setValue(title_val);
+                    newPost.child("desc").setValue(desc_val);
+                    newPost.child("image").setValue(downloadUrl.toString());
+                    newPost.child("uid").setValue(firebaseAuth.getCurrentUser());
+
                     mProgress.dismiss();
+
+                    startActivity(new Intent(PostActivity.this, Main2Activity.class));
+                    Toast.makeText(PostActivity.this, "Success!", Toast.LENGTH_LONG).show();
                 }
             });
         }

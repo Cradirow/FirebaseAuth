@@ -35,7 +35,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(this,LoginActivity.class));
         }
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("UserInfo");
 
         editTextAddress = (EditText) findViewById(R.id.editTextAddress);
         editTextName = (EditText)findViewById(R.id.editTextName);
