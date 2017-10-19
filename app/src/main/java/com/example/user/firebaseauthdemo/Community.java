@@ -74,17 +74,30 @@ public class Community extends Fragment {
 
         public BlogViewHolder(View itemView) {
             super(itemView);
-
             mView = itemView;
         }
         public void setTitle(String title){
             TextView post_title = (TextView) mView.findViewById(R.id.post_title);
-            post_title.setText(title);
+            if(title.length()>30)
+            {
+                post_title.setText(title.substring(0,30));
+            }
+            else
+            {
+                post_title.setText(title);
+            }
         }
 
         public void setDesc(String desc){
             TextView post_desc = (TextView) mView.findViewById(R.id.post_desc);
-            post_desc.setText(desc);
+            if(desc.length()>50)
+            {
+                post_desc.setText(desc.substring(0,50));
+            }
+            else
+            {
+                post_desc.setText(desc);
+            }
         }
 
         public void setImage(Context ctx, String image){
