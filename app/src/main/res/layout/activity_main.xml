@@ -25,6 +25,16 @@
            android:layout_gravity="center_horizontal"/>
 
        <EditText
+           android:layout_margin="15dp"
+           android:inputType="textPersonName"
+           android:hint="Enter your name"
+           android:id="@+id/editTextName"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           tools:layout_editor_absoluteY="0dp"
+           tools:layout_editor_absoluteX="8dp" />
+
+       <EditText
         android:layout_margin="15dp"
         android:inputType="textEmailAddress"
         android:hint="Enter your email"
@@ -34,7 +44,7 @@
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="8dp" />
 
-    <EditText
+        <EditText
         android:layout_margin="15dp"
         android:inputType="textPassword"
         android:hint="Enter your password"
@@ -43,6 +53,7 @@
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="8dp" />
+
 
        <Button
            android:layout_margin="15dp"

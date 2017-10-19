@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,6 +39,8 @@ public class PostActivity extends AppCompatActivity {
     private StorageReference mStorage;
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
+    private FirebaseUser mCurrentUser;
+    private DatabaseReference mDatabaseUser;
 
     private ProgressDialog mProgress;
 
@@ -59,6 +62,8 @@ public class PostActivity extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Blog");
         firebaseAuth = FirebaseAuth.getInstance();
+        mCurrentUser = firebaseAuth.getCurrentUser();
+        mDatabaseUser = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUser.getUid());
 
         mProgress = new ProgressDialog(this);
 
@@ -99,7 +104,7 @@ public class PostActivity extends AppCompatActivity {
                     newPost.child("title").setValue(title_val);
                     newPost.child("desc").setValue(desc_val);
                     newPost.child("image").setValue(downloadUrl.toString());
-                    newPost.child("uid").setValue(firebaseAuth.getCurrentUser());
+                    newPost.child("uid").setValue(mCurrentUser.getUid());
 
                     mProgress.dismiss();
 

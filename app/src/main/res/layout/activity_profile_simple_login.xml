@@ -15,31 +15,12 @@
 
         <TextView
             android:layout_margin="15dp"
-            android:id="@+id/textViewUserName"
+            android:id="@+id/textViewUserGmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="TextView"
             android:layout_gravity="center_horizontal"/>
-
-        <EditText
-            android:id="@+id/resetPassword"
-            android:hint="수정할 비밀번호"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/resetPasswordRe"
-            android:hint="수정할 비밀번호를 다시 입력하세요"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:layout_margin="15dp"
-            android:id="@+id/buttonSave"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="저장하기" />
 
         <Button
             android:id="@+id/buttonLogout"

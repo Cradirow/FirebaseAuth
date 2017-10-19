@@ -13,8 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +30,6 @@ public class Main2Activity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -33,6 +38,9 @@ public class Main2Activity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        mCurrentUser = firebaseAuth.getCurrentUser();
     }
 
     @Override
@@ -69,6 +77,8 @@ public class Main2Activity extends AppCompatActivity
 
     private void displaySelectedScreen(int id){
 
+        String mail = mCurrentUser.getEmail();
+
         Fragment fragment = null;
 
         switch (id){
@@ -82,8 +92,14 @@ public class Main2Activity extends AppCompatActivity
                 fragment = new Community();
                 break;
             case R.id.nav_manage:
-                finish();
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                if(mail.contains("gmail.com")) {
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), ProfileActivityGmail.class));
+                }
+                else{
+                    finish();
+                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                }
         }
 
         if(fragment != null){

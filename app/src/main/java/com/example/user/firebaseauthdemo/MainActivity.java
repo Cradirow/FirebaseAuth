@@ -16,11 +16,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button buttonRegister;
 
+    private EditText editTextName;
     private EditText editTextEmail;
     private EditText editTextPassword;
     private TextView textViewSignIn;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressDialog progressDialog;
 
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         progressDialog = new ProgressDialog(MainActivity.this);
         firebaseAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
         if(firebaseAuth.getCurrentUser() != null){
             //profile activity here
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
 
+        editTextName = (EditText) findViewById(R.id.editTextName);
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
@@ -56,8 +62,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void registerUser(){
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
+        final String name = editTextName.getText().toString().trim();
+        final String email = editTextEmail.getText().toString().trim();
+        final String password = editTextPassword.getText().toString().trim();
+
+        if(TextUtils.isEmpty(name)){
+            Toast.makeText(this, "이름을 입력하세요", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if(TextUtils.isEmpty(email)){
             //email is empty
@@ -86,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                                 finish();
+                            DatabaseReference newPost = mDatabase.push();
+                            newPost.child("name").setValue(name);
+                            newPost.child("email").setValue(email);
                                 startActivity(new Intent(getApplicationContext(), Main2Activity.class));
                         }else{
                             Toast.makeText(MainActivity.this, "등록할 수 없습니다.", Toast.LENGTH_SHORT).show();
