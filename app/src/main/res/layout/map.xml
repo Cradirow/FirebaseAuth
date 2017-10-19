@@ -10,4 +10,9 @@
         android:text="Terror inform is displayed in here."
         android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </LinearLayout>
