@@ -25,7 +25,8 @@ import com.squareup.picasso.Picasso;
  * Created by HYB on 2017. 10. 11..
  */
 
-public class Community extends Fragment {
+public class Community extends Fragment
+{
 
     private RecyclerView mBlogList;
     private RecyclerView.LayoutManager layoutManager;
@@ -33,7 +34,8 @@ public class Community extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState)
+    {
         setHasOptionsMenu(true);
 
         View view = inflater.inflate(R.layout.community, container, false);
@@ -48,18 +50,17 @@ public class Community extends Fragment {
     }
 
     @Override
-    public void onStart() {
+    public void onStart()
+    {
         super.onStart();
 
         FirebaseRecyclerAdapter<Blog, BlogViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Blog, BlogViewHolder>(
 
-                Blog.class,
-                R.layout.blog_row,
-                BlogViewHolder.class,
-                mDatabase
-        ) {
+                Blog.class, R.layout.blog_row, BlogViewHolder.class, mDatabase)
+        {
             @Override
-            protected void populateViewHolder(BlogViewHolder viewHolder, Blog model, int position) {
+            protected void populateViewHolder(BlogViewHolder viewHolder, Blog model, int position)
+            {
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setDesc(model.getDesc());
                 viewHolder.setImage(getActivity().getApplicationContext(), model.getImage());
@@ -68,19 +69,23 @@ public class Community extends Fragment {
         mBlogList.setAdapter(firebaseRecyclerAdapter);
     }
 
-    public static class BlogViewHolder extends RecyclerView.ViewHolder{
+    public static class BlogViewHolder extends RecyclerView.ViewHolder
+    {
 
         View mView;
 
-        public BlogViewHolder(View itemView) {
+        public BlogViewHolder(View itemView)
+        {
             super(itemView);
             mView = itemView;
         }
-        public void setTitle(String title){
+
+        public void setTitle(String title)
+        {
             TextView post_title = (TextView) mView.findViewById(R.id.post_title);
-            if(title.length()>30)
+            if (title.length() > 30)
             {
-                post_title.setText(title.substring(0,30));
+                post_title.setText(title.substring(0, 30));
             }
             else
             {
@@ -88,11 +93,12 @@ public class Community extends Fragment {
             }
         }
 
-        public void setDesc(String desc){
+        public void setDesc(String desc)
+        {
             TextView post_desc = (TextView) mView.findViewById(R.id.post_desc);
-            if(desc.length()>50)
+            if (desc.length() > 50)
             {
-                post_desc.setText(desc.substring(0,50));
+                post_desc.setText(desc.substring(0, 50));
             }
             else
             {
@@ -100,7 +106,8 @@ public class Community extends Fragment {
             }
         }
 
-        public void setImage(Context ctx, String image){
+        public void setImage(Context ctx, String image)
+        {
             ImageView post_image = (ImageView) mView.findViewById(R.id.post_image);
             Picasso.with(ctx).load(image).into(post_image);
 
@@ -109,16 +116,19 @@ public class Community extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    {
         inflater.inflate(R.menu.community_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
 
-        if(item.getItemId() == R.id.action_add){
+        if (item.getItemId() == R.id.action_add)
+        {
             Intent intent = new Intent(getActivity(), PostActivity.class);
             startActivity(intent);
         }
