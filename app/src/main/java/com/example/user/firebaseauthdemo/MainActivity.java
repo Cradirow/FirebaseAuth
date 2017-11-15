@@ -1,11 +1,17 @@
 package com.example.user.firebaseauthdemo;
 
+import android.*;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText editTextEmail;
     private EditText editTextPassword;
     private TextView textViewSignIn;
+    public static final int REQUEST_LOCATION_CODE = 99;
 
     private ProgressDialog progressDialog;
 
@@ -42,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressDialog = new ProgressDialog(MainActivity.this);
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        Log.d("", "퍼미션 체크전");
+            checkLocationPermission();
 
         if(firebaseAuth.getCurrentUser() != null){
             //profile activity here
@@ -121,4 +131,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(this, LoginActivity.class));
         }
     }
+
+
+
+    public boolean checkLocationPermission()
+    {
+
+        Log.d("", "퍼미션 체크안");
+        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED)
+        {
+            Log.d("", "퍼미션 받음");
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION))
+            {
+                Log.d("", "리퀘ㅡ트 띠움");
+                ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_CODE);
+            }
+            else
+            {
+                Log.d("", "리퀘ㅡ트 띠움");
+                ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_CODE);
+
+            }
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+    }
+
 }

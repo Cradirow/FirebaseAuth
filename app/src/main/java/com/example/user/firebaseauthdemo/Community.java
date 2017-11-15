@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,8 +22,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 /**
- * Created by HYB on 2017. 10. 11..
+ * Created by HYB on 2017. 10 . 11..
  */
 
 public class Community extends Fragment
@@ -37,14 +40,17 @@ public class Community extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState)
     {
         setHasOptionsMenu(true);
-
+        LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         View view = inflater.inflate(R.layout.community, container, false);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Blog");
 
+        lm.setReverseLayout(true);
+        lm.setStackFromEnd(true);
+
         mBlogList = (RecyclerView) view.findViewById(R.id.blog_list);
         mBlogList.setHasFixedSize(true);
-        mBlogList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mBlogList.setLayoutManager(lm);
 
         return view;
     }
@@ -54,9 +60,8 @@ public class Community extends Fragment
     {
         super.onStart();
 
-        FirebaseRecyclerAdapter<Blog, BlogViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Blog, BlogViewHolder>(
-
-                Blog.class, R.layout.blog_row, BlogViewHolder.class, mDatabase)
+        FirebaseRecyclerAdapter<Blog, BlogViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Blog, BlogViewHolder>
+                ( Blog.class, R.layout.blog_row, BlogViewHolder.class, mDatabase)
         {
             @Override
             protected void populateViewHolder(BlogViewHolder viewHolder, Blog model, int position)
@@ -64,6 +69,7 @@ public class Community extends Fragment
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setDesc(model.getDesc());
                 viewHolder.setImage(getActivity().getApplicationContext(), model.getImage());
+                viewHolder.setNickname(model.getNickname());
             }
         };
         mBlogList.setAdapter(firebaseRecyclerAdapter);
@@ -110,6 +116,12 @@ public class Community extends Fragment
         {
             ImageView post_image = (ImageView) mView.findViewById(R.id.post_image);
             Picasso.with(ctx).load(image).into(post_image);
+
+        }
+        public void setNickname(String nickname)
+        {
+            TextView nick_title = (TextView)mView.findViewById(R.id.nick_Title);
+            nick_title.setText(nickname);
 
         }
 

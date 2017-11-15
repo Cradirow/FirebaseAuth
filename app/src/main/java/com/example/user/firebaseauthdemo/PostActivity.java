@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -78,7 +79,6 @@ public class PostActivity extends AppCompatActivity {
                 startActivityForResult(gallaryIntent, GALLARY_REQUEST);
             }
         });
-
         mSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,6 +105,7 @@ public class PostActivity extends AppCompatActivity {
                 newPost.child("title").setValue(title_val);
                 newPost.child("desc").setValue(desc_val);
                 newPost.child("uid").setValue(mCurrentUser.getUid());
+                newPost.child("nickname").setValue(mCurrentUser.getDisplayName());
 
                 mProgress.dismiss();
             }
@@ -123,6 +124,7 @@ public class PostActivity extends AppCompatActivity {
                         newPost.child("desc").setValue(desc_val);
                         newPost.child("image").setValue(downloadUrl.toString());
                         newPost.child("uid").setValue(mCurrentUser.getUid());
+                        newPost.child("nickname").setValue(mCurrentUser.getDisplayName());
 
                         mProgress.dismiss();
 
@@ -130,9 +132,6 @@ public class PostActivity extends AppCompatActivity {
                     }
                 });
             }
-            android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-            android.support.v4.app.FragmentTransaction ft = fm.beginTransaction();
-
             finish();
             Toast.makeText(PostActivity.this, "Success!", Toast.LENGTH_LONG).show();
 
