@@ -47,10 +47,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-/**
- * Created by HYB on 2017. 10. 11..
- */
-
 public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
 
@@ -59,32 +55,22 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2002;
-    private static final int UPDATE_INTERVAL_MS = 15000;
-    private static final int FASTEST_UPDATE_INTERVAL_MS = 15000;
+    private static final int UPDATE_INTERVAL_MS = 5000;
+    private static final int FASTEST_UPDATE_INTERVAL_MS = 5000;
 
     private GoogleMap googleMap = null;
     private MapView mapView = null;
     private GoogleApiClient googleApiClient = null;
     private Marker currentMarker = null;
 
-    private final static int MAXENTRIES = 5;
-    private String[] LikelyPlaceNames = null;
-    private String[] LikelyAddresses = null;
-    private String[] LikelyAttributions = null;
-    private LatLng[] LikelyLatLngs = null;
-
-    public Map()
-    {
-
-    }
-
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet)
     {
         if (currentMarker != null)
-        { currentMarker.remove(); }
+        {
+            currentMarker.remove();
+        }
         if (location != null)
         {
-            Log.i(TAG, " Got my Loc!! ");
             //현재위치의 위도 경도 가져옴
             LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -139,7 +125,6 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
 
                 setCurrentLocation(location, place.getName().toString(), place.getAddress().toString());
             }
-
             @Override
             public void onError(Status status)
             {
@@ -331,9 +316,9 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     {
         Log.i(TAG, "onLocationChanged call..");
         lastLocation = location;
-        if(currentMarker != null)
+        if (currentMarker != null)
         {
-            currentMarker .remove();
+            currentMarker.remove();
         }
         LatLng mlanglang = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
@@ -344,41 +329,38 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
         currentMarker = googleMap.addMarker(markerOptions);
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(mlanglang));
         googleMap.animateCamera(CameraUpdateFactory.zoomBy(10));
-
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo((17.0f)));
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle)
     {
-
-        Log.i(TAG, "An error occurred: onConnected");
         if (!checkLocationServicesStatus())
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("위치 서비스 비활성화");
-            builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하십시오.");
-            builder.setCancelable(true);
-            builder.setPositiveButton("설정", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
-                    Intent callGPSSettingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
-                }
-            });
-            builder.setNegativeButton("취소", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
+                    builder.setTitle("위치 서비스 비활성화");
+                    builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하십시오.");
+                    builder.setCancelable(true);
+                    builder.setPositiveButton("설정", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i)
+                        {
+                            Intent callGPSSettingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
+                        }
+                    });
+                    builder.setNegativeButton("취소", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i)
+                        {
                     dialogInterface.cancel();
                 }
             });
             builder.create().show();
         }
 
-        Log.i(TAG, "An error occurred: onConnected2");
         LocationRequest locationRequest = new LocationRequest();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(UPDATE_INTERVAL_MS);
@@ -390,6 +372,8 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
             {
 
                 LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+                this.googleMap.getUiSettings().setCompassEnabled(true);
+                this.googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
             }
         }
         else
@@ -399,8 +383,6 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
             this.googleMap.getUiSettings().setCompassEnabled(true);
             this.googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         }
-
-        Log.i(TAG, "An error occurred: onConnected3");
 
     }
 
