@@ -75,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
         SignInButton buttonGoogleSignIn = (SignInButton) findViewById(R.id.buttonGoogleSignIn);
+        SignInButton buttonkakaoSignIn = (SignInButton) findViewById(R.id.buttonKakaoSignIn);
         textViewSignUp = (TextView) findViewById(R.id.textViewSignUp);
 
         progressDialog = new ProgressDialog(this);
@@ -96,11 +97,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         buttonGoogleSignIn.setOnClickListener(new View.OnClickListener()
         {
-
             @Override
             public void onClick(View v)
             {
                 signIn();
+            }
+        });
+        buttonkakaoSignIn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showLoginActivity();
             }
         });
     }
@@ -118,6 +126,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    private void showLoginActivity() {
+     //   Intent intent = new Intent(this, AgeAuthLoginActivity.class);
+    //    startActivity(intent);
+        finish();
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -226,6 +239,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         {
             finish();
         }
+
     }
 
 }
