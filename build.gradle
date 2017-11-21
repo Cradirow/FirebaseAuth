@@ -11,7 +11,12 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-
+subprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/' }
+    }
+}
 allprojects {
     repositories {
         jcenter()

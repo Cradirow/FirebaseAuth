@@ -20,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private FirebaseAuth firebaseAuth;
+/*    private FirebaseAuth firebaseAuth;
 
     private TextView textViewUserName;
     private Button buttonLogout;
@@ -29,18 +29,18 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private EditText resetPassword, resetPasswordRe;
     private Button buttonSave;
 
-    public static final String TAG = "HELPLIST";
+    public static final String TAG = "HELPLIST";*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        firebaseAuth = FirebaseAuth.getInstance();
+/*        firebaseAuth = FirebaseAuth.getInstance();
         if(firebaseAuth.getCurrentUser() == null){
             finish();
             startActivity(new Intent(this,LoginActivity.class));
-        }
-
+        }*/
+/*
         databaseReference = FirebaseDatabase.getInstance().getReference().child("UserInfo");
 
         resetPassword = (EditText) findViewById(R.id.resetPassword);
@@ -53,11 +53,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         textViewUserName.setText(" Welcome " + user.getDisplayName());
         buttonLogout = (Button)findViewById(R.id.buttonLogout);
         buttonLogout.setOnClickListener(this);
-        buttonSave.setOnClickListener(this);
+        buttonSave.setOnClickListener(this);*/
     }
 
     private void saveUserInformation(){
-        String password = resetPassword.getText().toString().trim();
+/*        String password = resetPassword.getText().toString().trim();
         String passwordRe = resetPasswordRe.getText().toString().trim();
 
         if(password == passwordRe){
@@ -73,12 +73,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     });
         }
 
-        Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_LONG).show();*/
     }
 
     @Override
     public void onClick(View view) {
-        if(view == buttonLogout){
+/*        if(view == buttonLogout){
             firebaseAuth.signOut();
             finish();
             startActivity(new Intent(this, LoginActivity.class));
@@ -86,6 +86,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         if(view == buttonSave){
             saveUserInformation();
-        }
+        }*/
     }
 }

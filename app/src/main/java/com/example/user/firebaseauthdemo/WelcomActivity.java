@@ -19,6 +19,7 @@ public class WelcomActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcom);
+
         new Handler().postDelayed(new Runnable()
         {
             @Override

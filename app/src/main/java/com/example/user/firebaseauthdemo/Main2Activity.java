@@ -91,6 +91,10 @@ public class Main2Activity extends AppCompatActivity
                 fragment = new Community();
                 break;
             case R.id.nav_manage:
+                fragment = new BlankFragment();
+                break;
+
+                /*
                 if(mail.contains("gmail.com")) {
                     finish();
                     startActivity(new Intent(getApplicationContext(), ProfileActivityGmail.class));
@@ -98,7 +102,7 @@ public class Main2Activity extends AppCompatActivity
                 else{
                     finish();
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                }
+                }*/
         }
 
         if(fragment != null){
@@ -106,7 +110,6 @@ public class Main2Activity extends AppCompatActivity
             ft.replace(R.id.content_main, fragment);
             ft.commit();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
     }
