@@ -27,10 +27,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.kakao.auth.ISessionCallback;
+import com.kakao.auth.Session;
+import com.kakao.util.exception.KakaoException;
+import com.kakao.util.helper.log.Logger;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
-
+    private SessionCallback callback;
     private Button buttonSignIn;
     private EditText editTextEmail;
     private EditText editTextPassword;
@@ -96,7 +100,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         buttonGoogleSignIn.setOnClickListener(new View.OnClickListener()
         {
-
             @Override
             public void onClick(View v)
             {
@@ -118,11 +121,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    private void showLoginActivity() {
+     //   Intent intent = new Intent(this, AgeAuthLoginActivity.class);
+    //    startActivity(intent);
+        finish();
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN)
         {
@@ -139,6 +145,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // ...
             }
         }
+
+        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data))
+        {
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account)
@@ -226,6 +238,46 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         {
             finish();
         }
+
     }
 
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Session.getCurrentSession().removeCallback(callback);
+    }
+
+
+    private class SessionCallback implements ISessionCallback
+    {
+
+        @Override
+        public void onSessionOpened() {
+            Log.d("JangminLog", "onSessionOpened");
+            redirectSignupActivity();  // 세션 연결성공 시 redirectSignupActivity() 호출
+        }
+
+        @Override
+        public void onSessionOpenFailed(KakaoException exception) {
+            if(exception != null) {
+
+                Log.d("JangminLog", "exception");
+                Logger.e(exception);
+            }
+
+            Log.d("JangminLog", "OpenFaile!!");
+            setContentView(R.layout.activity_login); // 세션 연결이 실패했을때
+        }                                            // 로그인화면을 다시 불러옴
+    }
+
+    protected void redirectSignupActivity() {       //세션 연결 성공 시 SignupActivity로 넘김
+        final Intent intent = new Intent(this, Main2Activity.class);
+
+        Log.d("JangminLog", "Main2Activity");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        finish();
+    }
 }

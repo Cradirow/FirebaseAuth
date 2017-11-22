@@ -72,14 +72,17 @@
         <com.google.android.gms.common.SignInButton
             android:id="@+id/buttonGoogleSignIn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp">
         </com.google.android.gms.common.SignInButton>
 
         <com.kakao.usermgmt.LoginButton
-            android:id="@+id/buttonKakaoSignIn"
+            android:id="@+id/com_kakao_login"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.05"/>
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"/>
+
+
 
         <TextView
             android:id="@+id/textViewSignUp"
