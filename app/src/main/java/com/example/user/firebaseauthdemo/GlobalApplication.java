@@ -22,7 +22,7 @@ public class GlobalApplication extends Application {
         super.onCreate();
         instance = this;
 
-        Log.d("JangminLog","OnCreate");
+        Log.d("JangminLog","new KakaoSDKAdapter OnCreate");
         KakaoSDK.init(new KakaoSDKAdapter());
     }
 
@@ -40,7 +40,11 @@ public class GlobalApplication extends Application {
      */
     public static GlobalApplication getGlobalApplicationContext() {
         if(instance == null)
+        {
+            Log.d("JangminLog","getGlobalApplicationContext Error");
             throw new IllegalStateException("this application does not inherit com.kakao.GlobalApplication");
+        }
+
         return instance;
     }
 

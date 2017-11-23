@@ -24,9 +24,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile group: 'com.kakao.sdk', name: 'usermgmt', version: '1.2.2'
-    compile group: 'com.kakao.sdk', name: 'kakaolink', version: '1.2.2'
-    compile group: 'com.kakao.sdk', name: 'kakaotalk', version: '1.2.2'
+    compile group: 'com.kakao.sdk', name: 'usermgmt', version: '1.5.1'
+    compile group: 'com.kakao.sdk', name: 'kakaolink', version: '1.5.1'
+    compile group: 'com.kakao.sdk', name: 'kakaotalk', version: '1.5.1'
 
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
