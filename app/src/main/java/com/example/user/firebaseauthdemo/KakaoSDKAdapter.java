@@ -12,6 +12,7 @@ import com.kakao.auth.KakaoAdapter;
 /**
  * @author leoshin on 15. 9. 15.
  */
+
 public class KakaoSDKAdapter extends KakaoAdapter {
 
     /**

@@ -2,10 +2,14 @@ package com.example.user.firebaseauthdemo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +36,8 @@ import com.kakao.auth.Session;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 
+import java.security.MessageDigest;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
     private SessionCallback callback;
@@ -54,6 +60,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
+        getAppKeyHash();
+
+        callback = new SessionCallback();
+        Session.getCurrentSession().addCallback(callback);
+
+        Log.d("JangminLog","OnCreate");
 
         firebaseAuth = firebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener()
@@ -107,7 +121,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
-
+    private void getAppKeyHash() {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String something = new String(Base64.encode(md.digest(), 0));
+                Log.d("Hash key", something);
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            Log.e("name not found", e.toString());
+        }
+    }
     @Override
     protected void onStart()
     {
@@ -121,11 +149,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void showLoginActivity() {
-     //   Intent intent = new Intent(this, AgeAuthLoginActivity.class);
-    //    startActivity(intent);
-        finish();
-    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -146,8 +169,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
 
+        Logger.d("JangminLog","b4 OnActivityResult");
+
         if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data))
         {
+
+            Logger.d("JangminLog","OnActivityResult");
             return;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -240,16 +267,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
     }
-
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Session.getCurrentSession().removeCallback(callback);
     }
-
-
     private class SessionCallback implements ISessionCallback
     {
 
@@ -258,7 +280,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.d("JangminLog", "onSessionOpened");
             redirectSignupActivity();  // 세션 연결성공 시 redirectSignupActivity() 호출
         }
-
         @Override
         public void onSessionOpenFailed(KakaoException exception) {
             if(exception != null) {
@@ -271,7 +292,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             setContentView(R.layout.activity_login); // 세션 연결이 실패했을때
         }                                            // 로그인화면을 다시 불러옴
     }
-
     protected void redirectSignupActivity() {       //세션 연결 성공 시 SignupActivity로 넘김
         final Intent intent = new Intent(this, Main2Activity.class);
 

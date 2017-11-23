@@ -3,6 +3,7 @@ package com.example.user.firebaseauthdemo;
 
 import android.app.Activity;
 import android.app.Application;
+import android.util.Log;
 
 import com.kakao.auth.KakaoSDK;
 
@@ -21,6 +22,7 @@ public class GlobalApplication extends Application {
         super.onCreate();
         instance = this;
 
+        Log.d("JangminLog","OnCreate");
         KakaoSDK.init(new KakaoSDKAdapter());
     }
 
