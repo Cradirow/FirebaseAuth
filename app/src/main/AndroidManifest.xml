@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.user.firebaseauthdemo">
+    package="com.example.user.firebaseauthdemo">
 
     <user-permission android:name="android.permission.INTERNET"/>
 
@@ -15,6 +15,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+
+        android:name=".GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -38,10 +40,13 @@
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".PostActivity"/>
-
+        <!--<application
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"/>
+-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="AIzaSyDFcfVXa2gUyq0cdbJP7c8ZO-HOnwfCyBM"/>
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="1a655e3b70b4d35c600b6421de81b42f" />

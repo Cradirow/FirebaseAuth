@@ -338,23 +338,23 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
         if (!checkLocationServicesStatus())
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("위치 서비스 비활성화");
-                    builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하십시오.");
-                    builder.setCancelable(true);
-                    builder.setPositiveButton("설정", new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
-                            Intent callGPSSettingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
-                        }
-                    });
-                    builder.setNegativeButton("취소", new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i)
-                        {
+            builder.setTitle("위치 서비스 비활성화");
+            builder.setMessage("앱을 사용하기 위해서는 위치 서비스가 필요합니다.\n" + "위치 설정을 수정하십시오.");
+            builder.setCancelable(true);
+            builder.setPositiveButton("설정", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    Intent callGPSSettingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
+                }
+            });
+            builder.setNegativeButton("취소", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
                     dialogInterface.cancel();
                 }
             });
