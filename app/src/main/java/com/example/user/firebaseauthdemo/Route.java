@@ -1,9 +1,11 @@
 package com.example.user.firebaseauthdemo;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -19,7 +21,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,6 +50,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import Modules.DirectionFinder;
+import Modules.DirectionFinderListener;
+import Modules.Routing;
 
 /**
  * Created by HYB on 2017. 10. 11..
@@ -51,7 +67,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Route extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener{
+        LocationListener, DirectionFinderListener{
 
     private static final LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
     private static final String TAG = "googlemap example";
@@ -70,6 +86,15 @@ public class Route extends Fragment implements OnMapReadyCallback,
     private String[] LikelyAddresses = null;
     private String[] LikelyAttributions = null;
     private LatLng[] LikelyLatLngs = null;
+
+    private Button btnFindPath;
+    private EditText etOrigin;
+    private EditText etDestination;
+
+    private List<Marker> originMarkers = new ArrayList<>();
+    private List<Marker> destinationMarkers = new ArrayList<>();
+    private List<Polyline> polylinePaths = new ArrayList<>();
+    private ProgressDialog progressDialog;
 
     public Route() {
         //required
@@ -102,6 +127,16 @@ public class Route extends Fragment implements OnMapReadyCallback,
         mapView = (MapView) layout.findViewById(R.id.route);
         mapView.getMapAsync(this);
 
+        btnFindPath = (Button)layout.findViewById(R.id.btnFindPath);
+        etOrigin = (EditText)layout.findViewById(R.id.place_autocomplete_fragment);
+        etDestination = (EditText)layout.findViewById(R.id.place_autocomplete_powered_by_google);
+
+        btnFindPath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendRequest();
+            }
+        });
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getActivity().getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
@@ -124,9 +159,29 @@ public class Route extends Fragment implements OnMapReadyCallback,
         return layout;
     }
 
+    public void sendRequest(){
+        String origin = etOrigin.getText().toString();
+        String destination = etDestination.getText().toString();
+        if(origin.isEmpty()){
+            Toast.makeText(getActivity(), "Please enter origin address!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(destination.isEmpty()){
+            Toast.makeText(getActivity(), "Please enter destination address!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try{
+            new DirectionFinder((DirectionFinderListener) this, origin, destination).execute();
+        }catch(UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -392,5 +447,60 @@ public class Route extends Fragment implements OnMapReadyCallback,
                 setCurrentLocation(location, LikelyPlaceNames[0], LikelyAddresses[0]);
             }
         });
+    }
+
+    @Override
+    public void onDirectionFinderStart(){
+        progressDialog = ProgressDialog.show(getActivity(), "Please wait.",
+                "Finding direction...", true);
+
+        if(originMarkers != null){
+            for(Marker marker : originMarkers){
+                marker.remove();
+            }
+        }
+        if(destinationMarkers != null){
+            for(Marker marker : destinationMarkers){
+                marker.remove();
+            }
+        }
+        if(polylinePaths != null){
+            for(Polyline polyline:polylinePaths){
+                polyline.remove();
+            }
+        }
+
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Routing> routes){
+        progressDialog.dismiss();
+        polylinePaths = new ArrayList<>();
+        originMarkers = new ArrayList<>();
+        destinationMarkers = new ArrayList<>();
+
+        for(Routing route : routes){
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
+            ((TextView) mapView.findViewById(R.id.tvDuration)).setText(route.duration.text);
+            ((TextView) mapView.findViewById(R.id.tvDistance)).setText(route.distance.text);
+
+            originMarkers.add(googleMap.addMarker(new MarkerOptions()
+                    .title(route.startAddress)
+                    .position(route.startLocation)));
+            destinationMarkers.add(googleMap.addMarker(new MarkerOptions()
+                    .title(route.endAddress)
+                    .position(route.endLocation)));
+
+            PolylineOptions polylineOptions = new PolylineOptions()
+                    .geodesic(true)
+                    .color(Color.BLUE)
+                    .width(10);
+
+            for(int i=0; i<route.points.size(); i++){
+                polylineOptions.add(route.points.get(i));
+            }
+
+            polylinePaths.add(googleMap.addPolyline(polylineOptions));
+        }
     }
 }
