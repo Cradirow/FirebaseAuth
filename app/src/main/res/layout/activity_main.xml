@@ -6,68 +6,82 @@
     android:layout_height="match_parent"
     tools:context="com.example.user.firebaseauthdemo.MainActivity">
 
-   <LinearLayout
-       android:layout_centerHorizontal="true"
-       android:layout_centerVertical="true"
-       android:orientation="vertical"
-       android:layout_width="368dp"
-       android:layout_height="wrap_content"
-       tools:layout_editor_absoluteY="0dp"
-       tools:layout_editor_absoluteX="8dp" >
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.495">
 
-       <TextView
-           android:layout_margin="30dp"
-           android:text="환영합니다"
-           android:id="@+id/textView"
-           android:layout_width="wrap_content"
-           android:textAppearance="?android:attr/textAppearanceLarge"
-           android:layout_height="wrap_content"
-           android:layout_gravity="center_horizontal"/>
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal"/>
 
-       <EditText
-           android:layout_margin="15dp"
-           android:inputType="textPersonName"
-           android:hint="Enter your name"
-           android:id="@+id/editTextName"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           tools:layout_editor_absoluteY="0dp"
-           tools:layout_editor_absoluteX="8dp" />
-
-       <EditText
-        android:layout_margin="15dp"
-        android:inputType="textEmailAddress"
-        android:hint="Enter your email"
-        android:id="@+id/editTextEmail"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="8dp" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="30dp"
+            android:text="환영합니다"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
 
         <EditText
-        android:layout_margin="15dp"
-        android:inputType="textPassword"
-        android:hint="Enter your password"
-        android:id="@+id/editTextPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="8dp" />
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:hint="Enter your name"
+            android:inputType="textPersonName"
+            android:singleLine="false"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp"/>
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:hint="Enter your email"
+            android:inputType="textEmailAddress"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp"/>
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:hint="Enter your password"
+            android:inputType="textPassword"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp"/>
 
 
-       <Button
-           android:layout_margin="15dp"
-           android:id="@+id/buttonRegister"
-           android:text="가입"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/buttonRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="가입"/>
 
-       <TextView
-           android:textAlignment="center"
-           android:text="이미 가입했나요? 이곳을 클릭하세요"
-           android:id="@+id/textViewSignIn"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/textViewSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="이미 가입했나요? 이곳을 클릭하세요"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
