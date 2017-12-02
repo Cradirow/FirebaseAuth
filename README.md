@@ -18,15 +18,15 @@ In reality, we can't predict the randomize terror. So, you must be careful.
 
 We'll continually update lastest terror information.
 
-[image link]
+![MainScreen](./HelplistMain.jpg)
 
 
 ## Funcions
-#### Register and login
+### Register and login
 You can sign up by using Gmail, Kakao and normal mail.
 
 
-#### Terror location on Google maps
+### Terror location on Google maps
 Basically all terror info is stored in Firebase DB.
 
 So when you run the application, DB will download and mark in the map.
@@ -34,7 +34,7 @@ So when you run the application, DB will download and mark in the map.
 Markers also include several detail information : scale of damage, number of victims and terrorists, etc.
 
 
-#### Find the route on Google maps
+### Find the route on Google maps
 User can use route finding functions.
 
 It'll be calaculate the way by walking.
@@ -42,7 +42,7 @@ It'll be calaculate the way by walking.
 This function is developed by using Google Directions API.
 
 
-#### Community
+### Community
 User can share their tour tips, advices and experiences.
 
 Everyone who joined this application, can using community.
