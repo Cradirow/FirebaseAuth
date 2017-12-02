@@ -18,7 +18,7 @@ In reality, we can't predict the randomize terror. So, you must be careful.
 
 We'll continually update lastest terror information.
 
-![MainScreen](./HelplistMain.jpg)
+![MainScreen](./MainScreen.jpg)
 
 
 ## Funcions
