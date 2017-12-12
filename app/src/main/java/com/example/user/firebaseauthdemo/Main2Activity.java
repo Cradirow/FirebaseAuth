@@ -76,7 +76,7 @@ public class Main2Activity extends AppCompatActivity
 
     private void displaySelectedScreen(int id){
 
-        String mail = mCurrentUser.getEmail();
+       // String mail = mCurrentUser.getEmail();
 
         Fragment fragment = null;
 
