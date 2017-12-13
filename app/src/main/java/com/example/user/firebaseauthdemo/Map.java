@@ -46,9 +46,17 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
 {
+    ChildEventListener mChildEventListener;
+    DatabaseReference mProfileRef = FirebaseDatabase.getInstance().getReference("Terrorinfo");
 
     private Location lastLocation;
     private static final LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
@@ -62,6 +70,7 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     private MapView mapView = null;
     private GoogleApiClient googleApiClient = null;
     private Marker currentMarker = null;
+    Marker marker;
 
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet)
     {
@@ -93,6 +102,7 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
         markerOptions.draggable(true);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         currentMarker = this.googleMap.addMarker(markerOptions);
+        addMarkersToMap(this.googleMap);
 
         this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(DEFAULT_LOCATION));
     }
@@ -183,6 +193,50 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
 
     }
 
+    private void addMarkersToMap(final GoogleMap mgoogle)
+    {
+        Log.d("JangminLog","Addmarker Start");
+        mChildEventListener = mProfileRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                TerrorInfo marker = dataSnapshot.getValue(TerrorInfo.class);
+                float lat = marker.getLatitude();
+                float lon = marker.getLongitude();
+
+                Log.d("JangminLog","Lat = "+ lat);
+                Log.d("JangminLog","Long = "+ lon);
+                LatLng loc = new LatLng(lat,lon);
+                mgoogle.addMarker(new MarkerOptions().position(loc));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot)
+            {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s)
+            {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+
+    }
+
     @Override
     public void onLowMemory()
     {
@@ -251,6 +305,7 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
         googleMap.getUiSettings().setCompassEnabled(true);
         // 매끄럽게 이동함
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
 
         //  API 23 이상이면 런타임 퍼미션 처리 필요
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
