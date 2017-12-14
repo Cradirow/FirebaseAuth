@@ -1,10 +1,13 @@
 package com.example.user.firebaseauthdemo;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+
 /**
  * Created by HANSUNG on 2017-12-13.
  */
 
-public class TerrorInfo
+public class TerrorInfo implements ClusterItem
 {
     public String attacktype1_txt;
     public String city;
@@ -181,5 +184,23 @@ public class TerrorInfo
         this.nwound = nwound;
         this.summary = summary;
         this.targtype1_txt = targtype1_txt;
+    }
+
+    @Override
+    public LatLng getPosition()
+    {
+        return new LatLng(latitude, longitude);
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return country_txt;
+    }
+
+    @Override
+    public String getSnippet()
+    {
+        return Double.toString(eventid);
     }
 }

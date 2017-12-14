@@ -53,10 +53,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.ClusterManager;
 
 public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnInfoWindowClickListener
 {
     ChildEventListener mChildEventListener;
+
+    private ClusterManager<TerrorInfo> mClusterManager;
     DatabaseReference mProfileRef = FirebaseDatabase.getInstance().getReference("Terrorinfo");
 
     private Location lastLocation;
@@ -84,27 +87,25 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
             //현재위치의 위도 경도 가져옴
             LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(currentLocation);
-            markerOptions.title(markerTitle);
-            markerOptions.snippet(markerSnippet);
-            markerOptions.draggable(true);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-            currentMarker = this.googleMap.addMarker(markerOptions);
+//            MarkerOptions markerOptions = new MarkerOptions();
+//            markerOptions.position(currentLocation);
+//            markerOptions.title(markerTitle);
+//            markerOptions.snippet(markerSnippet);
+//            markerOptions.draggable(true);
+//            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+//            currentMarker = this.googleMap.addMarker(markerOptions);
 
             this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
             return;
         }
 
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(DEFAULT_LOCATION);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        currentMarker = this.googleMap.addMarker(markerOptions);
-        addMarkersToMap(this.googleMap);
-
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(DEFAULT_LOCATION);
+//        markerOptions.title(markerTitle);
+//        markerOptions.snippet(markerSnippet);
+//        markerOptions.draggable(true);
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+//        currentMarker = this.googleMap.addMarker(markerOptions);
         this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(DEFAULT_LOCATION));
     }
 
@@ -202,20 +203,25 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
                 TerrorInfo marker = dataSnapshot.getValue(TerrorInfo.class);
-                float lat = marker.getLatitude();
-                float lon = marker.getLongitude();
-                String  gname = marker.getGname();
-                String sum = marker.getSummary();
-                String city = marker.getCity();
-                int killed = marker.getNkill();
-                int injured = marker.getNwound();
-
-                Log.d("JangminLog","Lat = "+ lat);
-                Log.d("JangminLog","Long = "+ lon);
-                LatLng loc = new LatLng(lat,lon);
-                mgoogle.addMarker(new MarkerOptions().position(loc)
-                .title(city)
-                .snippet(Double.toString(marker.getEventid())));
+                if(marker.getNkill()==0)
+                {
+                    return;
+                }
+                mClusterManager.addItem(marker);
+//                float lat = marker.getLatitude();
+//                float lon = marker.getLongitude();
+//                String  gname = marker.getGname();
+//                String sum = marker.getSummary();
+//                String city = marker.getCity();
+//                int killed = marker.getNkill();
+//                int injured = marker.getNwound();
+//
+//                Log.d("JangminLog","Lat = "+ lat);
+//                Log.d("JangminLog","Long = "+ lon);
+//                LatLng loc = new LatLng(lat,lon);
+//                mgoogle.addMarker(new MarkerOptions().position(loc)
+//                .title(city)
+//                .snippet(Double.toString(marker.getEventid())));
             }
 
             @Override
@@ -305,11 +311,17 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
 
         Log.i(TAG, "An error occurred: onMapReady");
         this.googleMap = googleMap;
-        this.googleMap.setOnInfoWindowClickListener(this);
+        //this.googleMap.setOnInfoWindowClickListener(this);
 
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에 지도의 초기위치를 서울로 이동
         setCurrentLocation(null, "위치정보 가져올 수 없음", "위치 퍼미션과 GPS 활성 여부 확인");
 
+        mClusterManager = new ClusterManager<>(this.getContext(), googleMap);
+        googleMap.setOnCameraIdleListener(mClusterManager);
+        googleMap.setOnMarkerClickListener(mClusterManager);
+        googleMap.setOnInfoWindowClickListener(this);
+        addMarkersToMap(googleMap);
+        mClusterManager.cluster();
         //나침반이 나타나도록 설정
         googleMap.getUiSettings().setCompassEnabled(true);
         // 매끄럽게 이동함
@@ -385,12 +397,12 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
             currentMarker.remove();
         }
         LatLng mlanglang = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(mlanglang);
-        markerOptions.title("Current Location");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
-        currentMarker = googleMap.addMarker(markerOptions);
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(mlanglang);
+//        markerOptions.title("Current Location");
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+//
+//        currentMarker = googleMap.addMarker(markerOptions);
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(mlanglang));
         googleMap.animateCamera(CameraUpdateFactory.zoomBy(10));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo((17.0f)));
@@ -478,7 +490,6 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
     {
         final String id;
         id = marker.getSnippet();
-        marker.
 
         final AlertDialog.Builder atl = new AlertDialog.Builder(this.getContext());
 
