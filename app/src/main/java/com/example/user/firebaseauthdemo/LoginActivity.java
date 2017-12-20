@@ -33,6 +33,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
+import com.kakao.network.ErrorResult;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.MeResponseCallback;
+import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 
@@ -40,6 +44,11 @@ import java.security.MessageDigest;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
+
+    private String userName;
+    private String userId;
+    private String profileUrl;
+
     private SessionCallback callback;
     private Button buttonSignIn;
     private EditText editTextEmail;
@@ -62,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
 
-        getAppKeyHash();
+        //getAppKeyHash();
 
         callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);
@@ -121,21 +130,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
-    private void getAppKeyHash() {
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md;
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                String something = new String(Base64.encode(md.digest(), 0));
-                Log.d("Hash key", something);
+    /*    private void getAppKeyHash() {
+            try {
+                PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+                for (Signature signature : info.signatures) {
+                    MessageDigest md;
+                    md = MessageDigest.getInstance("SHA");
+                    md.update(signature.toByteArray());
+                    String something = new String(Base64.encode(md.digest(), 0));
+                    Log.d("Hash key", something);
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.e("name not found", e.toString());
             }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            Log.e("name not found", e.toString());
-        }
-    }
+        }*/             //Hash Key를 Log에 출력, KAKAO API에 추가해줘야한다. Release, Debug 따로 정해줘야한다.
     @Override
     protected void onStart()
     {
@@ -263,6 +272,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         if (view == textViewSignUp)
         {
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
             finish();
         }
 
@@ -297,6 +310,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void redirectSignupActivity() {       //세션 연결 성공 시 SignupActivity로 넘김
         final Intent intent = new Intent(this, Main2Activity.class);
 
+        UserManagement.requestMe(new MeResponseCallback()
+        {
+            @Override
+            public void onSuccess(UserProfile result)
+            {
+
+                profileUrl = result.getProfileImagePath();     //User Image
+                userId = String.valueOf(result.getId());       //User ID
+                userName = result.getNickname();               //User Name
+                Log.d("Jangmin", profileUrl + userId + userName);
+
+            }
+
+            @Override
+            public void onSessionClosed(ErrorResult errorResult)
+            {
+
+            }
+
+            @Override
+            public void onNotSignedUp()
+            {
+
+            }
+        });
         Log.d("JangminLog", "Main2Activity");
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);

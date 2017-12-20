@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.user.firebaseauthdemo">
+          package="com.example.user.firebaseauthdemo">
 
     <user-permission android:name="android.permission.INTERNET"/>
 
@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-
         android:name=".GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -40,16 +39,17 @@
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".PostActivity"/>
-        <!--<application
+        <!--
+            <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"/>
--->
+        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDOUubG8c_tW5MAldnWlgcIbIC2WEpI58A"/>
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="1a655e3b70b4d35c600b6421de81b42f" />
+            android:value="1a655e3b70b4d35c600b6421de81b42f"/>
 
         <service android:name=".MyFirebaseInstanceIDService">
             <intent-filter>
@@ -61,6 +61,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
+        <activity android:name=".InfoActivity">
+        </activity>
     </application>
 
 </manifest>

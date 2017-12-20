@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -39,22 +40,34 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.ClusterManager;
 
-public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener
+public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnInfoWindowClickListener
 {
+    ChildEventListener mChildEventListener;
+
+    private ClusterManager<TerrorInfo> mClusterManager;
+    DatabaseReference mProfileRef = FirebaseDatabase.getInstance().getReference("Terrorinfo");
 
     private Location lastLocation;
     private static final LatLng DEFAULT_LOCATION = new LatLng(37.56, 126.97);
     private static final String TAG = "googlemap_example";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 2002;
-    private static final int UPDATE_INTERVAL_MS = 5000;
-    private static final int FASTEST_UPDATE_INTERVAL_MS = 5000;
+    private static final int UPDATE_INTERVAL_MS = 20000000;
+    private static final int FASTEST_UPDATE_INTERVAL_MS = 20000000;
 
     private GoogleMap googleMap = null;
     private MapView mapView = null;
     private GoogleApiClient googleApiClient = null;
     private Marker currentMarker = null;
+    Marker marker;
 
     public void setCurrentLocation(Location location, String markerTitle, String markerSnippet)
     {
@@ -67,26 +80,25 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
             //현재위치의 위도 경도 가져옴
             LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(currentLocation);
-            markerOptions.title(markerTitle);
-            markerOptions.snippet(markerSnippet);
-            markerOptions.draggable(true);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-            currentMarker = this.googleMap.addMarker(markerOptions);
+//            MarkerOptions markerOptions = new MarkerOptions();
+//            markerOptions.position(currentLocation);
+//            markerOptions.title(markerTitle);
+//            markerOptions.snippet(markerSnippet);
+//            markerOptions.draggable(true);
+//            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+//            currentMarker = this.googleMap.addMarker(markerOptions);
 
             this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
             return;
         }
 
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(DEFAULT_LOCATION);
-        markerOptions.title(markerTitle);
-        markerOptions.snippet(markerSnippet);
-        markerOptions.draggable(true);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-        currentMarker = this.googleMap.addMarker(markerOptions);
-
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(DEFAULT_LOCATION);
+//        markerOptions.title(markerTitle);
+//        markerOptions.snippet(markerSnippet);
+//        markerOptions.draggable(true);
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+//        currentMarker = this.googleMap.addMarker(markerOptions);
         this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(DEFAULT_LOCATION));
     }
 
@@ -176,6 +188,62 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
 
     }
 
+    private void addMarkersToMap(final GoogleMap mgoogle)
+    {
+        Log.d("JangminLog","Addmarker Start");
+        mChildEventListener = mProfileRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                TerrorInfo marker = dataSnapshot.getValue(TerrorInfo.class);
+                if(marker.getNkill()==0)
+                {
+                    return;
+                }
+                mClusterManager.addItem(marker);
+//                float lat = marker.getLatitude();
+//                float lon = marker.getLongitude();
+//                String  gname = marker.getGname();
+//                String sum = marker.getSummary();
+//                String city = marker.getCity();
+//                int killed = marker.getNkill();
+//                int injured = marker.getNwound();
+//
+//                Log.d("JangminLog","Lat = "+ lat);
+//                Log.d("JangminLog","Long = "+ lon);
+//                LatLng loc = new LatLng(lat,lon);
+//                mgoogle.addMarker(new MarkerOptions().position(loc)
+//                .title(city)
+//                .snippet(Double.toString(marker.getEventid())));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot)
+            {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s)
+            {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
+
+    }
+
     @Override
     public void onLowMemory()
     {
@@ -236,14 +304,22 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
 
         Log.i(TAG, "An error occurred: onMapReady");
         this.googleMap = googleMap;
+        //this.googleMap.setOnInfoWindowClickListener(this);
 
         //런타임 퍼미션 요청 대화상자나 GPS 활성 요청 대화상자 보이기전에 지도의 초기위치를 서울로 이동
         setCurrentLocation(null, "위치정보 가져올 수 없음", "위치 퍼미션과 GPS 활성 여부 확인");
 
+        mClusterManager = new ClusterManager<>(this.getContext(), googleMap);
+        googleMap.setOnCameraIdleListener(mClusterManager);
+        googleMap.setOnMarkerClickListener(mClusterManager);
+        googleMap.setOnInfoWindowClickListener(this);
+        addMarkersToMap(googleMap);
+        mClusterManager.cluster();
         //나침반이 나타나도록 설정
         googleMap.getUiSettings().setCompassEnabled(true);
         // 매끄럽게 이동함
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
 
         //  API 23 이상이면 런타임 퍼미션 처리 필요
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -314,12 +390,12 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
             currentMarker.remove();
         }
         LatLng mlanglang = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(mlanglang);
-        markerOptions.title("Current Location");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
-        currentMarker = googleMap.addMarker(markerOptions);
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(mlanglang);
+//        markerOptions.title("Current Location");
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+//
+//        currentMarker = googleMap.addMarker(markerOptions);
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(mlanglang));
         googleMap.animateCamera(CameraUpdateFactory.zoomBy(10));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo((17.0f)));
@@ -400,5 +476,61 @@ public class Map extends Fragment implements OnMapReadyCallback, GoogleApiClient
 
         setCurrentLocation(location, "위치정보 가져올 수 없음", "위치 퍼미션과 GPS활성 여부 확인");
         Log.i(TAG, "An error occurred: ENDonConnectionFailed");
+    }
+
+    @Override
+    public void onInfoWindowClick(final Marker marker)
+    {
+        final String id;
+        id = marker.getSnippet();
+
+        final AlertDialog.Builder atl = new AlertDialog.Builder(this.getContext());
+
+        mChildEventListener = mProfileRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                TerrorInfo info = dataSnapshot.getValue(TerrorInfo.class);
+                if(id.equals(Double.toString(info.getEventid())))
+                {
+
+                    atl.setMessage(info.getSummary() + "\nKill : "+ info.getNkill() + "\nWound : "+info.getNwound() + "\nTerrorBy : "+info.getGname() + "\nWeapon : "+ info.getAttacktype1_txt() + "\nTarget : "+info.getTargtype1_txt()).setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    dialog.dismiss();
+                                }
+                            });
+                    AlertDialog alert = atl.create();
+                    alert.setTitle(info.getCity());
+                    alert.show();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot)
+            {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s)
+            {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
     }
 }
