@@ -272,6 +272,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onDestroy();
         Session.getCurrentSession().removeCallback(callback);
     }
+
     private class SessionCallback implements ISessionCallback
     {
 
@@ -292,6 +293,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             setContentView(R.layout.activity_login); // 세션 연결이 실패했을때
         }                                            // 로그인화면을 다시 불러옴
     }
+
     protected void redirectSignupActivity() {       //세션 연결 성공 시 SignupActivity로 넘김
         final Intent intent = new Intent(this, Main2Activity.class);
 
