@@ -12,24 +12,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="HelpList"
+        android:text="Jeff Han"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     <TextView
         android:id="@+id/gitURL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="https://github.com/Cradirow/FirebaseAuth" />
+        android:text="hanorang2@gmail.com" />
 
 </LinearLayout>

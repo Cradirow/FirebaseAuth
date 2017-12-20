@@ -1,14 +1,11 @@
 package com.example.user.firebaseauthdemo;
 
 import android.Manifest;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,7 +17,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -106,8 +102,6 @@ public class PostActivity extends AppCompatActivity {
                 newPost.child("desc").setValue(desc_val);
                 newPost.child("uid").setValue(mCurrentUser.getUid());
                 newPost.child("nickname").setValue(mCurrentUser.getDisplayName());
-
-                mProgress.dismiss();
             }
             else
             {
@@ -126,12 +120,11 @@ public class PostActivity extends AppCompatActivity {
                         newPost.child("uid").setValue(mCurrentUser.getUid());
                         newPost.child("nickname").setValue(mCurrentUser.getDisplayName());
 
-                        mProgress.dismiss();
-
-                        //startActivity(new Intent(PostActivity.this, Main2Activity.class));
                     }
                 });
             }
+            mProgress.dismiss();
+
             finish();
             Toast.makeText(PostActivity.this, "Success!", Toast.LENGTH_LONG).show();
 

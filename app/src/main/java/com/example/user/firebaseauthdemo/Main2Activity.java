@@ -1,6 +1,5 @@
 package com.example.user.firebaseauthdemo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -93,16 +92,6 @@ public class Main2Activity extends AppCompatActivity
             case R.id.nav_manage:
                 fragment = new BlankFragment();
                 break;
-
-                /*
-                if(mail.contains("gmail.com")) {
-                    finish();
-                    startActivity(new Intent(getApplicationContext(), ProfileActivityGmail.class));
-                }
-                else{
-                    finish();
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-                }*/
         }
 
         if(fragment != null){

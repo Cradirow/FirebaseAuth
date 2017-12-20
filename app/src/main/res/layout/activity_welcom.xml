@@ -14,5 +14,5 @@
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_light_normal"/>
+        app:srcCompat="@drawable/loading_screen"/>
 </android.support.design.widget.CoordinatorLayout>
