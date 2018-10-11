@@ -1,8 +1,6 @@
 # Helplist
 > Provide worldwide terror information via android application.
 
-> We currently developing the application!
-
 # Intro
 Welcome to helplist application!
 
